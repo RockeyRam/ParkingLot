@@ -1,0 +1,130 @@
+
+classDiagram
+    class Parking-lot{
+        -List~Floor~ Floors
+        -List~Gate~ EntryGates
+        -List~Gate~ ExitGates
+    }
+
+    class ParkingAttendent{
+        -Name
+        -Email
+        -EmployeeId
+    }
+
+    class Floor{
+        -DisplayBoard DisplayBoard
+        -List~Spot~ spots
+        -List~ParkingCounter~ counter
+    }
+
+    class ParkingCounter{
+
+    }
+
+    class Spot{
+        -VachileType size
+        -SpotStatus status
+    }
+    class Gate{
+        -Gate_Id
+        -ParkingAttendent Attendent
+    }
+
+    class Vachile{
+        -String VachileNumber
+        -VachileType Type
+    }
+
+    class VachileType{
+        <<Enum>>
+        SMALL
+        MEDIUM
+        LARGE
+    }
+
+    class SpotStatus{
+        <<Enum>>
+        FREE
+        OCCUPAID
+        OUT_OF_ORDER
+    }
+
+    class Payment{
+        -PaymentMode Mode
+        -Ticket Ticket
+        -Double Amount
+        -DateTime Time
+    }
+
+    class PaymentMode{
+        <<Enum>>
+        CASH
+        ONLINE
+    }
+
+    class Ticket{
+        -Vachile Vachile
+        -Gate EntryGate
+        -DateTime EntryTime
+        -Spot Spot
+    }
+
+    class Invoice{
+        -Payment Payment
+        -Double Amount
+        -PaymentStatus PaymentStatus
+        -DateTime ExitTime
+    }
+
+%% Relationships
+
+    Parking-lot --* Floor
+    Parking-lot --* Gate : EntryGate
+    Parking-lot --* Gate : ExitGate
+
+    Floor --* DisplayBoard
+    Floor --* Spot
+    Floor --* ParkingCounter
+
+    Spot --o VachileType
+    Spot --o SpotStatus
+
+    ParkingCounter --* ParkingAttendent
+
+    Gate --o ParkingAttendent
+
+    Vachile --o VachileType
+
+    Payment --o PaymentMode
+    Payment --* Ticket
+
+    Ticket --o Vachile
+    Ticket --* Gate
+    Ticket --* Spot
+
+    Invoice --* Payment
+    Invoice --o PaymentStatus
+
+
+    %% Cardinality
+
+    Parking-lot "1" --> "*" Floor : has
+    Parking-lot "1" --> "*" Gate  : has
+    Parking-lot "1" --> "*" Gate  : has
+
+    Floor "1" --> "1" DisplayBoard : has
+    Floor "1" --> "*" Spot : has
+    Floor "1" --> "1" ParkingCounter : has
+
+    Gate "*" --> "1" ParkingAttendent : has
+
+    Payment "1" --> "1" Ticket : for
+
+    Ticket "*" --> "1" Vachile : generated for
+    Ticket "*" --> "1" Gate : generated in
+    Ticket "*" --> "1" Spot : belongs to
+
+    Invoice "1" --> "1" Payment : paid by
+
+
